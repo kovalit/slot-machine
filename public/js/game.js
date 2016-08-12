@@ -2,14 +2,14 @@
     var game = {
         
         // settings
-        letterWidth: 216,
-        letterHeight: 144,
+        symbolWidth: 216,
+        symbolHeight: 144,
         
         slotCount : 3,
         fieldCount: 3,
         
         typeCount: 4,
-        availableLetters: ['A','B','C','D','E'],
+        availableSymbols: ['A','B','C','D','E'],
         
         // main objects
         slots: {},
@@ -23,7 +23,7 @@
                 
                 for (var j = 1; j <= this.typeCount; j++) {
                     
-                    var randomArr = this.shuffle(this.availableLetters);
+                    var randomArr = this.shuffle(this.availableSymbols);
                     this.slots[i] = this.slots[i].concat(randomArr); 
                     
                 }
