@@ -11,8 +11,12 @@
         typeCount: 4,
         availableSymbols: ['A','B','C','D','E'],
         
+        width: null,
+        height: null,
+        
         // main objects
         slots: {},
+        
         
 
         fillSlots: function() {
