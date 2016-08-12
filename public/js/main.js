@@ -55,6 +55,7 @@
         startClick: function() {
            //requestAnimationFrame(main.draw); 
             game.init();
+            game.stop();
             requestAnimationFrame(game.draw);
         },
         

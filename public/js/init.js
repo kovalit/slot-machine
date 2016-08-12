@@ -6,7 +6,7 @@
             main.subscribeToEvents();
             
             game.initStopedSlots();
-            game.stop();
+
 
             var requestAnimationFrame =  window.requestAnimationFrame ||
                     window.webkitRequestAnimationFrame ||

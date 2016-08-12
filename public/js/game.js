@@ -20,7 +20,7 @@
         
         iterator: null,
         
-        offset: 12,
+        speed: 12,
         
         
         
@@ -65,7 +65,7 @@
         
         initStopedSlots: function() {
             for (var i = 1; i <= this.slotCount; i++) {
-                this.stopedSlots[i] = false;
+                this.stopedSlots[i] = {isFinishTime: false, isFinishCalc: false};
             }
         },
         
@@ -73,15 +73,14 @@
         stop: function() {
             for (var i = 1; i <= game.slotCount; i++) { 
                 
-                isStop = game.stopedSlots[i];
+                var isStop = game.stopedSlots[i].isFinishTime;
                 if (!isStop) {
-                    isLastStop = false;
-                    game.stopedSlots[i] = true;
+                    game.stopedSlots[i].isFinishTime = true;
                     break;
                 }
             }
             
-            var isLastStop = game.stopedSlots[game.slotCount];
+            var isLastStop = game.stopedSlots[game.slotCount].isFinishTime;
 
             if(!isLastStop) {
                 setTimeout(game.stop, 1000);
@@ -136,7 +135,13 @@
             
             for (var i = 1; i <= game.slotCount; i++) {
                 
+                if (game.stopedSlots[i].isFinishCalc) {
+                    continue;
+                }
+                
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
+                    
+                    
                     
                     var x       = game.field[i][j].x;
                     var y       = game.field[i][j].y;
@@ -155,16 +160,29 @@
                     
                 }
                 
+                if (game.stopedSlots[i].isFinishTime && (game.iterator % game.symbolHeight) === 0) {
+                    game.stopedSlots[i].isFinishCalc = true;
+                    continue;
+                }
+                
+                
+                
             };
             
-            requestAnimationFrame(game.draw); 
+            var isLastStop = game.stopedSlots[game.slotCount].isFinishCalc;
+
+            if(!isLastStop) {
+                requestAnimationFrame(game.draw);
+            }
+            
+             
             
         },
         
         
         calc: function () {
             
-            game.iterator += game.offset;
+            game.iterator += game.speed;
             
             if (game.iterator >= game.slotHeight) {
                 game.iterator = 0;
@@ -173,11 +191,13 @@
             
             for (var i = 1; i <= game.slotCount; i++) {
                 
+                
+
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     
                     var y = game.field[i][j].y;
 
-                    y += game.offset;
+                    y += game.speed;
                     
                     if (y > game.height) {
                         y = -game.slotHeight + y;
@@ -185,6 +205,10 @@
 
                     game.field[i][j].y = y;
                 }
+                
+                
+                
+                
                 
             }
         },
