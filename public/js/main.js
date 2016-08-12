@@ -3,8 +3,6 @@
         
         symbols: {},
         context: null,
-
-        y: 0,
         
         
         calcParams : function() {
@@ -35,29 +33,14 @@
                 this.symbols[key].img.src = "img/symbol" + key + ".png";
             }  
         },
-        
-        
-        draw : function() {
-            main.y += 6;
-            if (main.y >= game.height) {
-               main.y =0; 
-            }
-            main.context.clearRect(0, 0, game.width, game.height);
-            main.context.drawImage(main.symbols.D.img, 
-                    0, 0, 
-                    game.symbolWidth, game.symbolHeight, 
-                    0, main.y, 
-                    game.symbolWidth, game.symbolHeight
-                ); 
-            requestAnimationFrame(main.draw);
-        },
+         
         
         startClick: function() {
-           //requestAnimationFrame(main.draw); 
             game.init();
-            game.stop();
+            setTimeout(game.stop, 1000);
             requestAnimationFrame(game.draw);
         },
+        
         
         subscribeToEvents: function() {
             document.getElementById('srartBth').onclick = this.startClick;   
