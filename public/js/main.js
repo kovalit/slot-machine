@@ -8,9 +8,10 @@
         
         
         calcParams : function() {
-                game.width = game.slotCount * game.symbolWidth;
-                game.height = game.lineCount * game.symbolHeight;
-                game.countItemInSlot = game.availableSymbols.length * game.typeCount;  
+                game.width              = game.slotCount * game.symbolWidth;
+                game.height             = game.lineCount * game.symbolHeight;
+                game.countSymbolInSlot  = game.availableSymbols.length * game.typeCount;  
+                game.slotHeight         = game.countSymbolInSlot * game.symbolHeight;  
         },
         
         
@@ -53,8 +54,9 @@
         
         startClick: function() {
            //requestAnimationFrame(main.draw); 
-           game.fillField();
-           game.draw();
+           game.init();
+          // game.draw();
+            requestAnimationFrame(game.calc);
         },
         
         subscribeToEvents: function() {

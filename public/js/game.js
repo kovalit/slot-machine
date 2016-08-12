@@ -1,7 +1,7 @@
     
     var game = {
         
-        // settings
+        // Initial params
         symbolWidth: 216,
         symbolHeight: 144,
         
@@ -11,10 +11,14 @@
         
         availableSymbols: ['A','B','C','D','E'],
         
-        // calc params
-        countItemInSlot: null,
+        // Calculated params
+        countSymbolInSlot: null,
         width: null,
         height: null,
+        
+        slotHeight: null,
+        
+        iterator: null,
         
         /* field
          * 
@@ -36,6 +40,17 @@
          * 
          */
         field: {},
+        
+        
+        init: function() {
+            
+                this.iterator = 0;
+                
+                this.field = {};
+                
+                this.fillField();
+                
+        },
         
 
         fillField: function() {
@@ -62,15 +77,19 @@
                 
                 var x = this.symbolWidth*(i-1);
                 
-                for (var j = 1; j <= game.countItemInSlot ; j++) {
+                for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     
                     var y = this.symbolHeight*(j-1);
                     
-                    this.field[i][j] = {x: x, y: y, type: randomSymbolList[i][j]};
+                    if (j > this.lineCount) {
+                        y -= this.slotHeight;
+                    }
+                    this.field[i][j] = {x: x, y: y, type: randomSymbolList[i][j-1]};
                     
                 }
                 
-            }         
+            }   
+
             
         },
         
@@ -81,14 +100,14 @@
             
             for (var i = 1; i <= this.slotCount; i++) {
                 
-                for (var j = 1; j <= game.countItemInSlot ; j++) {
+                for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     
                     var x = this.field[i][j].x;
                     var y = this.field[i][j].y;
                     var type = this.field[i][j].type;
                     
                     if (y < game.height) {
-                        
+
                         main.context.drawImage(main.symbols[type].img, 
                                 0, 0, 
                                 game.symbolWidth, game.symbolHeight, 
@@ -102,6 +121,35 @@
                 
             } 
             
+        },
+        
+        
+        calc: function () {
+            
+            game.iterator += 10;
+            
+            if (game.iterator >= game.slotHeight) {
+                game.iterator = 0;
+            }
+            
+            for (var i = 1; i <= game.slotCount; i++) {
+                
+                for (var j = 1; j <= game.countSymbolInSlot ; j++) {
+                    
+                    var y = game.field[i][j].y;
+                    y += game.iterator;
+                    
+                    if (y > game.height) {
+                        y = -game.slotHeight;
+                    }
+
+                    game.field[i][j].y = y;
+                }
+                
+            }
+            console.log(game.iterator);
+            game.draw();
+            requestAnimationFrame(game.calc); 
         },
         
         
