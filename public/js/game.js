@@ -20,6 +20,8 @@
         
         iterator: null,
         
+        offset: 12,
+        
         /* field
          * 
          * {
@@ -49,6 +51,8 @@
                 this.field = {};
                 
                 this.fillField();
+                
+                main.context.clearRect(0, 0, game.width, game.height)
                 
         },
         
@@ -96,15 +100,15 @@
         
         draw: function () {
             
-            main.context.clearRect(0, 0, game.width, game.height);
+            game.calc();
             
-            for (var i = 1; i <= this.slotCount; i++) {
+            for (var i = 1; i <= game.slotCount; i++) {
                 
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     
-                    var x = this.field[i][j].x;
-                    var y = this.field[i][j].y;
-                    var type = this.field[i][j].type;
+                    var x       = game.field[i][j].x;
+                    var y       = game.field[i][j].y;
+                    var type    = game.field[i][j].type;
                     
                     if (y < game.height) {
 
@@ -119,17 +123,20 @@
                     
                 }
                 
-            } 
+            };
+            
+            requestAnimationFrame(game.draw); 
             
         },
         
         
         calc: function () {
             
-            game.iterator += 10;
+            game.iterator += game.offset;
             
             if (game.iterator >= game.slotHeight) {
                 game.iterator = 0;
+               // return;
             }
             
             for (var i = 1; i <= game.slotCount; i++) {
@@ -137,19 +144,17 @@
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     
                     var y = game.field[i][j].y;
-                    y += game.iterator;
+
+                    y += game.offset;
                     
                     if (y > game.height) {
-                        y = -game.slotHeight;
+                        y = -game.slotHeight + y;
                     }
 
                     game.field[i][j].y = y;
                 }
                 
             }
-            console.log(game.iterator);
-            game.draw();
-            requestAnimationFrame(game.calc); 
         },
         
         

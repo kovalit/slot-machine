@@ -38,7 +38,7 @@
         
         
         draw : function() {
-            main.y += 10;
+            main.y += 6;
             if (main.y >= game.height) {
                main.y =0; 
             }
@@ -54,9 +54,8 @@
         
         startClick: function() {
            //requestAnimationFrame(main.draw); 
-           game.init();
-          // game.draw();
-            requestAnimationFrame(game.calc);
+            game.init();
+            requestAnimationFrame(game.draw);
         },
         
         subscribeToEvents: function() {
