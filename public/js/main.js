@@ -33,6 +33,9 @@
         
         draw : function() {
             main.y += 10;
+            if (main.y >= game.height) {
+               main.y =0; 
+            }
             main.context.clearRect(0, 0, game.width, game.height);
            main.context.drawImage(main.symbols.D.img, 
                     0, 0, 
@@ -54,9 +57,11 @@
     };
     
     (function () {
-        main.load();
-        main.createCanvas();
-        main.subscribeToEvents();
+        
+        game.fillField();
+       // main.load();
+       // main.createCanvas();
+      //  main.subscribeToEvents();
         
         var requestAnimationFrame =  window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
