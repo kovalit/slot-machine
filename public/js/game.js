@@ -6,11 +6,13 @@
         symbolHeight: 144,
         
         slotCount : 3,
-        fieldCount: 3,
-        
+        lineCount: 3,
         typeCount: 4,
+        
         availableSymbols: ['A','B','C','D','E'],
         
+        // calc params
+        countItemInSlot: null,
         width: null,
         height: null,
         
@@ -19,14 +21,14 @@
          * {
          * "1": 
          *      {
-         *          "1": {"x": 0, "y": 0, "type": "A",
-         *          "2": {"x": 0, "y": 144, "type": "B"
+         *          "1": {"x": 0, "y": 0, "type": "A"},
+         *          "2": {"x": 0, "y": 144, "type": "B"},
          *          ...
          *      }
          * "2": 
          *      {
-         *          "1": {"x": 266, "y": 0, "type": "C",
-         *          "2": {"x": 266, "y": 144, "type": "D"
+         *          "1": {"x": 266, "y": 0, "type": "C"},
+         *          "2": {"x": 266, "y": 144, "type": "D"},
          *          ...
          *      }
          *  ...  
@@ -39,7 +41,6 @@
         fillField: function() {
             
             var randomSymbolList = {};
-            var countItemInSlot = this.availableSymbols.length * this.typeCount;
             
             for (var i = 1; i <= this.slotCount; i++) {
                 
@@ -61,7 +62,7 @@
                 
                 var x = this.symbolWidth*(i-1);
                 
-                for (var j = 1; j <= countItemInSlot; j++) {
+                for (var j = 1; j <= game.countItemInSlot ; j++) {
                     
                     var y = this.symbolHeight*(j-1);
                     
@@ -70,6 +71,36 @@
                 }
                 
             }         
+            
+        },
+        
+        
+        draw: function () {
+            
+            main.context.clearRect(0, 0, game.width, game.height);
+            
+            for (var i = 1; i <= this.slotCount; i++) {
+                
+                for (var j = 1; j <= game.countItemInSlot ; j++) {
+                    
+                    var x = this.field[i][j].x;
+                    var y = this.field[i][j].y;
+                    var type = this.field[i][j].type;
+                    
+                    if (y < game.height) {
+                        
+                        main.context.drawImage(main.symbols[type].img, 
+                                0, 0, 
+                                game.symbolWidth, game.symbolHeight, 
+                                x, y, 
+                                game.symbolWidth, game.symbolHeight
+                            );
+                
+                    }
+                    
+                }
+                
+            } 
             
         },
         

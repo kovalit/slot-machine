@@ -8,11 +8,16 @@
 
         y: 0,
         
+        calcParams : function() {
+                game.width = game.slotCount * game.symbolWidth;
+                game.height = game.lineCount * game.symbolHeight;
+                game.countItemInSlot = game.availableSymbols.length * game.typeCount;  
+        },
+        
         createCanvas : function() {
                 var canvas = document.createElement("canvas");
                 
-                game.width = game.slotCount * game.symbolWidth;
-                game.height = game.fieldCount * game.symbolHeight;
+
 
                 canvas.setAttribute("width",  game.width);
                 canvas.setAttribute("height", game.height);
@@ -23,7 +28,7 @@
                 this.context = canvas.getContext("2d");
         },
         
-        load: function() {
+        loadImages: function() {
             for (var index in game.availableSymbols) {
                 var key = game.availableSymbols[index];
                 this.symbols[key] = {img: new Image()};
@@ -37,7 +42,7 @@
                main.y =0; 
             }
             main.context.clearRect(0, 0, game.width, game.height);
-           main.context.drawImage(main.symbols.D.img, 
+            main.context.drawImage(main.symbols.D.img, 
                     0, 0, 
                     game.symbolWidth, game.symbolHeight, 
                     0, main.y, 
@@ -47,7 +52,8 @@
         },
         
         startClick: function() {
-           requestAnimationFrame(main.draw); 
+           //requestAnimationFrame(main.draw); 
+           game.draw();
         },
         
         subscribeToEvents: function() {
@@ -58,10 +64,14 @@
     
     (function () {
         
+
+        
+        main.calcParams();
+        main.loadImages();
+        main.createCanvas();
+        main.subscribeToEvents();
+        
         game.fillField();
-       // main.load();
-       // main.createCanvas();
-      //  main.subscribeToEvents();
         
         var requestAnimationFrame =  window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
