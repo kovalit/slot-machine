@@ -1,28 +1,28 @@
     
     var game = {
         
-        // Initial params
-        symbolWidth: 216,
-        symbolHeight: 144,
+        // Initial game params
+        symbolWidth         : 216,
+        symbolHeight        : 144,
         
-        slotCount : 3,
-        lineCount: 3,
-        typeCount: 4,
+        slotCount           : 3,
+        lineCount           : 3,
+        typeCount           : 4,
         
-        availableSymbols: ['A','B','C','D','E'],
+        centerLine          : 2,
         
-        // Calculated params
-        countSymbolInSlot: null,
-        width: null,
-        height: null,
+        availableSymbols    : ['A','B','C','D','E'],
         
-        slotHeight: null,
+        speed               : 12,
         
-        iterator: null,
+        // Calculated game params
+        countSymbolInSlot   : null,
+        width               : null,
+        height              : null,
         
-        speed: 12,
+        slotHeight          : null,
         
-        
+        iterator            : null,
         
         /* field
          * 
@@ -140,9 +140,7 @@
                 }
                 
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
-                    
-                    
-                    
+
                     var x       = game.field[i][j].x;
                     var y       = game.field[i][j].y;
                     var type    = game.field[i][j].type;
@@ -164,9 +162,7 @@
                     game.stopedSlots[i].isFinishCalc = true;
                     continue;
                 }
-                
-                
-                
+    
             };
             
             var isLastStop = game.stopedSlots[game.slotCount].isFinishCalc;
@@ -174,9 +170,10 @@
             if(!isLastStop) {
                 requestAnimationFrame(game.draw);
             }
-            
-             
-            
+            else {
+                game.checkWin();
+            }
+    
         },
         
         
@@ -186,12 +183,12 @@
             
             if (game.iterator >= game.slotHeight) {
                 game.iterator = 0;
-               // return;
             }
             
             for (var i = 1; i <= game.slotCount; i++) {
-                
-                
+                if (game.stopedSlots[i].isFinishCalc) {
+                    continue;
+                }
 
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     
@@ -205,12 +202,36 @@
 
                     game.field[i][j].y = y;
                 }
-                
-                
-                
-                
-                
+   
             }
+        },
+        
+        
+        checkWin: function() {
+            
+           var centerSymbols = [];
+           var isWin = true;
+           
+           for (var i = 1; i <= game.slotCount; i++) {
+
+               for (var j = 1; j <= game.countSymbolInSlot ; j++) {
+                   
+                   if (game.field[i][j].y === game.symbolHeight * (game.centerLine - 1)) {
+                       centerSymbols.push(game.field[i][j].type);
+                   }
+
+               }
+            }
+            
+            var symbol = centerSymbols[0];
+            for (var key in centerSymbols) {
+               if (symbol !== centerSymbols[key]) {
+                   isWin = false; 
+                   break;
+               }
+               symbol = centerSymbols[key];
+           }
+           return isWin;
         },
         
         
