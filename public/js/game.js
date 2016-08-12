@@ -22,6 +22,8 @@
         
         offset: 12,
         
+        
+        
         /* field
          * 
          * {
@@ -43,6 +45,8 @@
          */
         field: {},
         
+        stopedSlots: {},
+        
         
         init: function() {
             
@@ -52,11 +56,39 @@
                 
                 this.fillField();
                 
-                main.context.clearRect(0, 0, game.width, game.height)
+                this.initStopedSlots();
+                
+                main.context.clearRect(0, 0, game.width, game.height);
                 
         },
         
+        
+        initStopedSlots: function() {
+            for (var i = 1; i <= this.slotCount; i++) {
+                this.stopedSlots[i] = false;
+            }
+        },
+        
+        
+        stop: function() {
+            for (var i = 1; i <= game.slotCount; i++) { 
+                
+                isStop = game.stopedSlots[i];
+                if (!isStop) {
+                    isLastStop = false;
+                    game.stopedSlots[i] = true;
+                    break;
+                }
+            }
+            
+            var isLastStop = game.stopedSlots[game.slotCount];
 
+            if(!isLastStop) {
+                setTimeout(game.stop, 1000);
+            }
+        },
+        
+        
         fillField: function() {
             
             var randomSymbolList = {};
