@@ -1,5 +1,3 @@
-  
-
 
     var main = {
         
@@ -8,17 +6,17 @@
 
         y: 0,
         
+        
         calcParams : function() {
                 game.width = game.slotCount * game.symbolWidth;
                 game.height = game.lineCount * game.symbolHeight;
                 game.countItemInSlot = game.availableSymbols.length * game.typeCount;  
         },
         
+        
         createCanvas : function() {
                 var canvas = document.createElement("canvas");
                 
-
-
                 canvas.setAttribute("width",  game.width);
                 canvas.setAttribute("height", game.height);
                 canvas.setAttribute("id", "gameField");
@@ -28,6 +26,7 @@
                 this.context = canvas.getContext("2d");
         },
         
+        
         loadImages: function() {
             for (var index in game.availableSymbols) {
                 var key = game.availableSymbols[index];
@@ -35,6 +34,7 @@
                 this.symbols[key].img.src = "img/symbol" + key + ".png";
             }  
         },
+        
         
         draw : function() {
             main.y += 10;
@@ -53,6 +53,7 @@
         
         startClick: function() {
            //requestAnimationFrame(main.draw); 
+           game.fillField();
            game.draw();
         },
         
@@ -62,27 +63,4 @@
         
     };
     
-    (function () {
-        
-
-        
-        main.calcParams();
-        main.loadImages();
-        main.createCanvas();
-        main.subscribeToEvents();
-        
-        game.fillField();
-        
-        var requestAnimationFrame =  window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimationFrame ||
-                function (callback) {
-                        window.setTimeout(callback, 10);
-                };
-        
-        window.requestAnimationFrame = requestAnimationFrame;
-        
-        
-    }());
+    
