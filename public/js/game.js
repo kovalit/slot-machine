@@ -2,7 +2,12 @@
     var game = {
         
         // settings
+        letterWidth: 216,
+        letterHeight: 144,
+        
         slotCount : 3,
+        fieldCount: 3,
+        
         typeCount: 4,
         availableLetters: ['A','B','C','D','E'],
         
