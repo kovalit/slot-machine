@@ -1,23 +1,6 @@
     
     var game = {
-        
-        // Initial game params
-        symbolWidth         : 216,
-        symbolHeight        : 144,
-        
-        slotCount           : 3,
-        lineCount           : 3,
-        typeCount           : 4,
-        
-        centerLine          : 2,
-        
-        availableSymbols    : ['A','B','C','D','E'],
-        
-        speed               : 12,
-        
-        winAnimationCount   : 5,
-        
-        // Calculated game params
+
         countSymbolInSlot   : null,
         width               : null,
         height              : null,
@@ -71,14 +54,14 @@
         
         
         initStopedSlots: function() {
-            for (var i = 1; i <= this.slotCount; i++) {
+            for (var i = 1; i <= config.slotCount; i++) {
                 this.stopedSlots[i] = {isFinishTime: false, isFinishCalc: false};
             }
         },
         
         
         stop: function() {
-            for (var i = 1; i <= game.slotCount; i++) { 
+            for (var i = 1; i <= config.slotCount; i++) { 
                 
                 var isStop = game.stopedSlots[i].isFinishTime;
                 if (!isStop) {
@@ -87,10 +70,10 @@
                 }
             }
             
-            var isLastStop = game.stopedSlots[game.slotCount].isFinishTime;
+            var isLastStop = game.stopedSlots[config.slotCount].isFinishTime;
 
             if(!isLastStop) {
-                setTimeout(game.stop, 1000);
+                setTimeout(game.stop, config.stopSlotDelay);
             }
         },
         
@@ -99,13 +82,13 @@
             
             var randomSymbolList = {};
             
-            for (var i = 1; i <= this.slotCount; i++) {
+            for (var i = 1; i <= config.slotCount; i++) {
                 
                 randomSymbolList[i] = [];
                 
-                for (var j = 1; j <= this.typeCount; j++) {
+                for (var j = 1; j <= config.typeCount; j++) {
                     
-                    var randomArr = this.shuffle(this.availableSymbols);
+                    var randomArr = this.shuffle(config.availableSymbols);
                     randomSymbolList[i] = randomSymbolList[i].concat(randomArr); 
                     
                 }
@@ -113,17 +96,17 @@
             }  
             
             
-            for (var i = 1; i <= this.slotCount; i++) {
+            for (var i = 1; i <= config.slotCount; i++) {
                 
                 this.field[i] = {};
                 
-                var x = this.symbolWidth*(i-1);
+                var x = config.symbolWidth * (i - 1);
                 
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     
-                    var y = this.symbolHeight*(j-1);
+                    var y = config.symbolHeight * (j - 1);
                     
-                    if (j > this.lineCount) {
+                    if (j > config.lineCount) {
                         y -= this.slotHeight;
                     }
                     this.field[i][j] = {x: x, y: y, type: randomSymbolList[i][j-1]};
@@ -140,7 +123,7 @@
             
             game.calc();
             
-            for (var i = 1; i <= game.slotCount; i++) {
+            for (var i = 1; i <= config.slotCount; i++) {
                 
                 if (game.stopedSlots[i].isFinishCalc) {
                     continue;
@@ -156,23 +139,23 @@
 
                         main.context.drawImage(main.symbols[type].img, 
                                 0, 0, 
-                                game.symbolWidth, game.symbolHeight, 
+                                config.symbolWidth, config.symbolHeight, 
                                 x, y, 
-                                game.symbolWidth, game.symbolHeight
+                                config.symbolWidth, config.symbolHeight
                             );
                 
                     }
                     
                 }
                 
-                if (game.stopedSlots[i].isFinishTime && (game.iterator % game.symbolHeight) === 0) {
+                if (game.stopedSlots[i].isFinishTime && (game.iterator % config.symbolHeight) === 0) {
                     game.stopedSlots[i].isFinishCalc = true;
                     continue;
                 }
     
             };
             
-            var isLastStop = game.stopedSlots[game.slotCount].isFinishCalc;
+            var isLastStop = game.stopedSlots[config.slotCount].isFinishCalc;
 
             if(!isLastStop) {
                 requestAnimationFrame(game.draw);
@@ -189,13 +172,13 @@
         
         calc: function () {
             
-            game.iterator += game.speed;
+            game.iterator += config.speed;
             
             if (game.iterator >= game.slotHeight) {
                 game.iterator = 0;
             }
             
-            for (var i = 1; i <= game.slotCount; i++) {
+            for (var i = 1; i <= config.slotCount; i++) {
                 if (game.stopedSlots[i].isFinishCalc) {
                     continue;
                 }
@@ -204,7 +187,7 @@
                     
                     var y = game.field[i][j].y;
 
-                    y += game.speed;
+                    y += config.speed;
                     
                     if (y > game.height) {
                         y = -game.slotHeight + y;
@@ -221,11 +204,11 @@
             
           var isWin = true;
            
-           for (var i = 1; i <= game.slotCount; i++) {
+           for (var i = 1; i <= config.slotCount; i++) {
 
                for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                    
-                   if (game.field[i][j].y === game.symbolHeight * (game.centerLine - 1)) {
+                   if (game.field[i][j].y === config.symbolHeight * (config.centerLine - 1)) {
                        game.centerSymbols.push(game.field[i][j].type);
                    }
 
@@ -247,28 +230,28 @@
         winAnimation: function() {
             game.winIterator +=1;
             
-            for (var i = 1; i <= game.slotCount; i++) {
+            for (var i = 1; i <= config.slotCount; i++) {
                 
-                var x = game.symbolWidth * (i-1);
-                var y = game.symbolHeight * (game.centerLine -1);
-                var dx = (game.winIterator - 1) * game.symbolWidth;
+                var x = config.symbolWidth * (i-1);
+                var y = config.symbolHeight * (config.centerLine -1);
+                var dx = (game.winIterator - 1) * config.symbolWidth;
                 
                 var type    = game.centerSymbols[i-1];
                 
                 main.context.drawImage(main.symbols[type].img, 
                         dx, 0, 
-                        game.symbolWidth, game.symbolHeight, 
+                        config.symbolWidth, config.symbolHeight, 
                         x, y, 
-                        game.symbolWidth, game.symbolHeight
+                        config.symbolWidth, config.symbolHeight
                     );
             }
             
-            if (game.winIterator <= game.winAnimationCount) {
+            if (game.winIterator <= config.winAnimationCount) {
                      window.setTimeout(
                              function() {
                                 requestAnimationFrame(game.winAnimation);   
                              }, 
-                     150);
+                        config.winAnimationDelay);
             }
         },
         
