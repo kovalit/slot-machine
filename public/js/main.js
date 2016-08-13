@@ -19,7 +19,7 @@
                 canvas.setAttribute("height", game.height);
                 canvas.setAttribute("id", "gameField");
                 
-                document.body.appendChild(canvas); 
+                document.body.insertBefore(canvas, document.body.childNodes[0]);
                 
                 this.context = canvas.getContext("2d");
         },
@@ -48,6 +48,4 @@
             document.getElementById('startBtn').onclick = this.startClick;   
         }
         
-    };
-    
-    
+    }; 
