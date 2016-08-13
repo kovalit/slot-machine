@@ -9,6 +9,7 @@
         
         iterator            : 0,
         winIterator         : 0,
+        isPlay              : false,
         
         /* field
          * 
@@ -161,6 +162,7 @@
                 requestAnimationFrame(game.draw);
             }
             else {
+                game.isPlay = false;
                 var isWin = game.checkWin();
                 if (isWin) {
                     requestAnimationFrame(game.winAnimation);

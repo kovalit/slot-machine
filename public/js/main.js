@@ -35,9 +35,12 @@
          
         
         startClick: function() {
-            game.init();
-            setTimeout(game.stop, config.stopDelay);
-            requestAnimationFrame(game.draw);
+            if (!game.isPlay) {
+                game.init();
+                game.isPlay = true;
+                requestAnimationFrame(game.draw);
+                setTimeout(game.stop, config.stopDelay);
+            }
         },
         
         
