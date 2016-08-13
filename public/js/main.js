@@ -5,6 +5,9 @@
         context: null,
         
         
+
+        
+        
         calcParams : function() {
                 game.width              = game.slotCount * game.symbolWidth;
                 game.height             = game.lineCount * game.symbolHeight;

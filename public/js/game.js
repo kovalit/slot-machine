@@ -15,6 +15,8 @@
         
         speed               : 12,
         
+        winAnimationCount   : 5,
+        
         // Calculated game params
         countSymbolInSlot   : null,
         width               : null,
@@ -22,7 +24,8 @@
         
         slotHeight          : null,
         
-        iterator            : null,
+        iterator            : 0,
+        winIterator         : 0,
         
         /* field
          * 
@@ -47,12 +50,16 @@
         
         stopedSlots: {},
         
+        centerSymbols: null,
+        
         
         init: function() {
             
                 this.iterator = 0;
+                this.winIterator = 0;
                 
                 this.field = {};
+                this.centerSymbols = [];
                 
                 this.fillField();
                 
@@ -171,7 +178,10 @@
                 requestAnimationFrame(game.draw);
             }
             else {
-                game.checkWin();
+                var isWin = game.checkWin();
+                if (isWin) {
+                    requestAnimationFrame(game.winAnimation);
+                }
             }
     
         },
@@ -209,29 +219,57 @@
         
         checkWin: function() {
             
-           var centerSymbols = [];
-           var isWin = true;
+          var isWin = true;
            
            for (var i = 1; i <= game.slotCount; i++) {
 
                for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                    
                    if (game.field[i][j].y === game.symbolHeight * (game.centerLine - 1)) {
-                       centerSymbols.push(game.field[i][j].type);
+                       game.centerSymbols.push(game.field[i][j].type);
                    }
 
                }
             }
             
-            var symbol = centerSymbols[0];
-            for (var key in centerSymbols) {
-               if (symbol !== centerSymbols[key]) {
+            var symbol = game.centerSymbols[0];
+            for (var key in game.centerSymbols) {
+               if (symbol !== game.centerSymbols[key]) {
                    isWin = false; 
                    break;
                }
-               symbol = centerSymbols[key];
+               symbol = game.centerSymbols[key];
            }
            return isWin;
+        },
+        
+        
+        winAnimation: function() {
+            game.winIterator +=1;
+            
+            for (var i = 1; i <= game.slotCount; i++) {
+                
+                var x = game.symbolWidth * (i-1);
+                var y = game.symbolHeight * (game.centerLine -1);
+                var dx = (game.winIterator - 1) * game.symbolWidth;
+                
+                var type    = game.centerSymbols[i-1];
+                
+                main.context.drawImage(main.symbols[type].img, 
+                        dx, 0, 
+                        game.symbolWidth, game.symbolHeight, 
+                        x, y, 
+                        game.symbolWidth, game.symbolHeight
+                    );
+            }
+            
+            if (game.winIterator <= game.winAnimationCount) {
+                     window.setTimeout(
+                             function() {
+                                requestAnimationFrame(game.winAnimation);   
+                             }, 
+                     150);
+            }
         },
         
         
