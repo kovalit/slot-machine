@@ -48,7 +48,7 @@
                 
                 this.initStopedSlots();
                 
-               
+                main.context.clearRect(0, 0, game.width, game.height);
                 
         },
         
@@ -123,6 +123,16 @@
             
             game.calc();
             
+            var clearSize = 0;
+            
+            for (var i = 1; i< config.slotCount; i++) {
+                if (game.stopedSlots[i].isFinishDraw) {
+                    clearSize += config.symbolWidth;
+                }
+            }
+
+            main.context.clearRect(clearSize, 0, game.width - clearSize, game.height);
+             
             for (var i = 1; i <= config.slotCount; i++) {
                 
                 if (game.stopedSlots[i].isFinishDraw) {
@@ -137,7 +147,6 @@
                     var isDraw  = ((y + config.symbolHeight) > 0);
                     
                     if (isDraw) {
-                        
                         main.context.drawImage(main.symbols[type].img, 
                                 0, 0, 
                                 config.symbolWidth, config.symbolHeight, 
@@ -229,9 +238,9 @@
         
         checkWin: function() {
             
-          var isWin = true;
+            var isWin = true;
            
-           for (var i = 1; i <= config.slotCount; i++) {
+            for (var i = 1; i <= config.slotCount; i++) {
 
                for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                    
@@ -258,6 +267,12 @@
         winAnimation: function() {
             game.winIterator +=1;
             
+            var end = (game.winIterator > config.winAnimationCount)
+            
+            if (!end) {
+                main.context.clearRect(0, (config.centerLine-1) * config.symbolHeight, game.width, config.symbolHeight);
+            }
+            
             for (var i = 1; i <= config.slotCount; i++) {
                 
                 var x = config.symbolWidth * (i-1);
@@ -274,7 +289,7 @@
                     );
             }
             
-            if (game.winIterator <= config.winAnimationCount) {
+            if (!end) {
                      window.setTimeout(
                              function() {
                                 requestAnimationFrame(game.winAnimation);   
