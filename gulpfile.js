@@ -34,7 +34,7 @@ gulp.task('bower', function() {
 });
 
 gulp.task('js', function() {
-    return gulp.src('public/js/dist/main.js')
+    return gulp.src('public/js/dist/app.js')
         .pipe(rigger())
         .pipe(uglify())
         .pipe(gulp.dest('public/js'))
