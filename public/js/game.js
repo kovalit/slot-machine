@@ -7,7 +7,6 @@
         
         slotHeight          : null,
         
-        iterator            : 0,
         winIterator         : 0,
         isPlay              : false,
         
@@ -49,7 +48,7 @@
                 
                 this.initStopedSlots();
                 
-                main.context.clearRect(0, 0, game.width, game.height);
+               
                 
         },
         
@@ -135,9 +134,10 @@
                     var x       = game.field[i][j].x;
                     var y       = game.field[i][j].y;
                     var type    = game.field[i][j].type;
+                    var isDraw  = ((y + config.symbolHeight) > 0);
                     
-                    if (y < game.height) {
-
+                    if (isDraw) {
+                        
                         main.context.drawImage(main.symbols[type].img, 
                                 0, 0, 
                                 config.symbolWidth, config.symbolHeight, 
@@ -201,7 +201,6 @@
                     game.field[i][j].y = y;
               
                 }
-
             }
         },
         
@@ -212,15 +211,17 @@
                 offset: config.speed, 
                 isLastCalc: false
             };
+            
             for (var j = 1; j <= game.countSymbolInSlot ; j++) {
                     var y = game.field[slot][j].y;
-                    if (y < 0 && Math.abs(y) < config.speed) {
+                    if (y <= 0 && Math.abs(y) <= config.speed) {
                         result.offset = Math.abs(y);
                         result.isLastCalc = true;
                         break;
                     }
 
             }
+            
             return result;
             
         },

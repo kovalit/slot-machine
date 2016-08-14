@@ -12,7 +12,7 @@
 
             availableSymbols    : ['A','B','C','D','E'],
 
-            speed               : 25,   // offset per iteration, px
+            speed               : 12,   // offset per iteration, px
 
             winAnimationCount   : 5,    // win keyframes count
 
