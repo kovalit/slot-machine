@@ -12,12 +12,12 @@
 
             availableSymbols    : ['A','B','C','D','E'],
 
-            speed               : 12,   // offset per iteration, px
+            speed               : 25,   // offset per iteration, px
 
             winAnimationCount   : 5,    // win keyframes count
 
             stopDelay           : 1000, // ms
             stopSlotDelay       : 1000, // ms  
 
-            winAnimationDelay   : 150   // ms
+            winAnimationDelay   : 200   // ms
     };

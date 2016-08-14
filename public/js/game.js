@@ -56,7 +56,7 @@
         
         initStopedSlots: function() {
             for (var i = 1; i <= config.slotCount; i++) {
-                this.stopedSlots[i] = {isFinishTime: false, isFinishCalc: false};
+                this.stopedSlots[i] = {isFinishTime: false, isFinishCalc: false, isFinishDraw: false};
             }
         },
         
@@ -126,7 +126,7 @@
             
             for (var i = 1; i <= config.slotCount; i++) {
                 
-                if (game.stopedSlots[i].isFinishCalc) {
+                if (game.stopedSlots[i].isFinishDraw) {
                     continue;
                 }
                 
@@ -149,14 +149,14 @@
                     
                 }
                 
-                if (game.stopedSlots[i].isFinishTime && (game.iterator % config.symbolHeight) === 0) {
-                    game.stopedSlots[i].isFinishCalc = true;
-                    continue;
+                if (game.stopedSlots[i].isFinishCalc) {
+                    game.stopedSlots[i].isFinishDraw = true;
                 }
+
     
             };
             
-            var isLastStop = game.stopedSlots[config.slotCount].isFinishCalc;
+            var isLastStop = game.stopedSlots[config.slotCount].isFinishDraw;
 
             if(!isLastStop) {
                 requestAnimationFrame(game.draw);
@@ -173,32 +173,56 @@
         
         
         calc: function () {
-            
-            game.iterator += config.speed;
-            
-            if (game.iterator >= game.slotHeight) {
-                game.iterator = 0;
-            }
-            
+       
             for (var i = 1; i <= config.slotCount; i++) {
+                
+                var offset = config.speed;
+                
                 if (game.stopedSlots[i].isFinishCalc) {
                     continue;
                 }
 
+                if (game.stopedSlots[i].isFinishTime) {
+                      var banance = game.calcBalance(i);
+                      offset = banance.offset;
+                      game.stopedSlots[i].isFinishCalc = banance.isLastCalc;
+                }
+
                 for (var j = 1; j <= game.countSymbolInSlot ; j++) {
-                    
+
                     var y = game.field[i][j].y;
 
-                    y += config.speed;
+                    y += offset;
                     
                     if (y > game.height) {
                         y = -game.slotHeight + y;
                     }
-
+                                       
                     game.field[i][j].y = y;
+              
                 }
-   
+
             }
+        },
+        
+        
+        calcBalance: function (slot) {
+            
+            var result = {
+                offset: config.speed, 
+                isLastCalc: false
+            };
+            for (var j = 1; j <= game.countSymbolInSlot ; j++) {
+                    var y = game.field[slot][j].y;
+                    if (y < 0 && Math.abs(y) < config.speed) {
+                        result.offset = Math.abs(y);
+                        result.isLastCalc = true;
+                        break;
+                    }
+
+            }
+            return result;
+            
         },
         
         
@@ -226,6 +250,7 @@
                symbol = game.centerSymbols[key];
            }
            return isWin;
+
         },
         
         
