@@ -1,9 +1,8 @@
     (function () {
 
             main.calcParams();
-            main.loadImages();
             main.createCanvas();
-            main.subscribeToEvents();
+            main.loadImages();
             
             game.initStopedSlots();
 
