@@ -38,7 +38,6 @@
         
         init: function() {
             
-                this.iterator = 0;
                 this.winIterator = 0;
                 
                 this.field = {};
@@ -54,13 +53,20 @@
         
         
         initStopedSlots: function() {
+            
             for (var i = 1; i <= config.slotCount; i++) {
-                this.stopedSlots[i] = {isFinishTime: false, isFinishCalc: false, isFinishDraw: false};
+                this.stopedSlots[i] = {
+                    isFinishTime: false,
+                    isFinishCalc: false, 
+                    isFinishDraw: false
+                };
             }
+            
         },
         
         
         stop: function() {
+            
             for (var i = 1; i <= config.slotCount; i++) { 
                 
                 var isStop = game.stopedSlots[i].isFinishTime;
@@ -75,6 +81,7 @@
             if(!isLastStop) {
                 setTimeout(game.stop, config.stopSlotDelay);
             }
+            
         },
         
         
@@ -265,9 +272,10 @@
         
         
         winAnimation: function() {
-            game.winIterator +=1;
             
-            var end = (game.winIterator > config.winAnimationCount)
+            game.winIterator += 1;
+            
+            var end = (game.winIterator > config.winAnimationCount);
             
             if (!end) {
                 main.context.clearRect(0, (config.centerLine-1) * config.symbolHeight, game.width, config.symbolHeight);
@@ -275,9 +283,9 @@
             
             for (var i = 1; i <= config.slotCount; i++) {
                 
-                var x = config.symbolWidth * (i-1);
-                var y = config.symbolHeight * (config.centerLine -1);
-                var dx = (game.winIterator - 1) * config.symbolWidth;
+                var x        = config.symbolWidth * (i-1);
+                var y       = config.symbolHeight * (config.centerLine -1);
+                var dx      = (game.winIterator - 1) * config.symbolWidth;
                 
                 var type    = game.centerSymbols[i-1];
                 
@@ -290,10 +298,10 @@
             }
             
             if (!end) {
-                     window.setTimeout(
-                             function() {
+                    window.setTimeout(
+                            function() {
                                 requestAnimationFrame(game.winAnimation);   
-                             }, 
+                            }, 
                         config.winAnimationDelay);
             }
         },

@@ -4,9 +4,6 @@
             main.createCanvas();
             main.loadImages();
             
-            game.initStopedSlots();
-
-
             var requestAnimationFrame =  window.requestAnimationFrame ||
                     window.webkitRequestAnimationFrame ||
                     window.mozRequestAnimationFrame ||
