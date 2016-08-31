@@ -1,13 +1,27 @@
 define(function () {
     
+    /**
+    * Контекст для рисования на холсте
+    */
     var _context;
          
     return {
         
+        /**
+        * Устанавливает контекст
+        */
         setContext: function(canvas) {
                 _context    = canvas.getContext("2d");
         },
 
+        /**
+        * Очищает холст
+        * 
+        * @param  {number} width - ширина области
+        * @param  {number} height - высота области
+        * @param  {number} left - начало области слева
+        * @param  {number} top - начало области сверху
+        */
         clear: function(width, height, left, top) {
                 if (left === undefined) {
                     left = 0;
@@ -18,7 +32,17 @@ define(function () {
                 _context.clearRect(left, top, width, height);
         },
         
-        
+        /**
+        * Отображает изображение на холсте 
+        * 
+        * @param  {Image} pictire - ширина области
+        * @param  {number} x - позиция изображения слева
+        * @param  {number} y - позиция изображения сверху
+        * @param  {number} width - ширина изображения, ширина области отображения 
+        * @param  {number} height - высота изображения, высота области отображения 
+        * @param  {number} dx - начальная позиция на изображении слева
+        * @param  {number} dy - начальная позиция на изображении сверху
+        */
         image: function(pictire, x, y, width, height, dx, dy) {
                 if (dx === undefined) {
                     dx = 0;

@@ -38,16 +38,13 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
                         this.createButton();
                         setTimeout(game.firstDraw, 100);
                     }
-
                 };
         })(),
 
         startClick: function() {
             
             if (!game.isPlay) {
-                game.init();
-                game.isPlay = true;
-                requestAnimationFrame(game.putPlayfield.bind(game));
+                game.run();
                 setTimeout(game.stop.bind(game), config.stopDelay);
             }
             
