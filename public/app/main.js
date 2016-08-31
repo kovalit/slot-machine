@@ -6,6 +6,8 @@ define(function (require) {
     
 
     page.createCanvas();
+    
+        
 
    
 });

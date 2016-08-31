@@ -4,7 +4,7 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
     return {
 
         createCanvas : function() {
-            
+
                 var canvas = document.createElement("canvas");
                 
                 canvas.setAttribute("width",  config.width);
@@ -20,10 +20,9 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
         
         loadImages: function() {
             
-            for (var index in config.availableSymbols) {
-                var key = config.availableSymbols[index];
+            for (var key in config.lots) {
                 var image = new Image();
-                image.src = "img/symbol" + key + ".png";
+                image.src = config.lots[key].src;
                 image.onload = this.checkImageLoad();
                 game.addSymbols(key, image);
             }  
@@ -35,7 +34,7 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
                 
                 return function() {
                     imageLoaded++;
-                    if (imageLoaded === config.availableSymbols.length) {
+                    if (imageLoaded === config.lotsCount) {
                         this.createButton();
                         setTimeout(game.firstDraw, 100);
                     }
@@ -48,7 +47,7 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
             if (!game.isPlay) {
                 game.init();
                 game.isPlay = true;
-                requestAnimationFrame(game.outputPlayfield.bind(game));
+                requestAnimationFrame(game.putPlayfield.bind(game));
                 setTimeout(game.stop.bind(game), config.stopDelay);
             }
             

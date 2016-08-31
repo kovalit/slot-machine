@@ -19,9 +19,15 @@ define(function () {
         },
         
         
-        image: function(pictire, x, y, width, height) {
+        image: function(pictire, x, y, width, height, dx, dy) {
+                if (dx === undefined) {
+                    dx = 0;
+                }
+                if (dy === undefined) {
+                    dy = 0;
+                }
                 _context.drawImage(pictire, 
-                        0, 0, 
+                        dx, dy, 
                         width, height, 
                         x, y, 
                         width, height

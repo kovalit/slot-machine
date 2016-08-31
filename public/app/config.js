@@ -1,6 +1,36 @@
 define(function () {
     
     var _fixedParams = {
+        
+            lots    : {
+                1 : {
+                    'src'   : 'img/lots/seven.png',
+                    'rate'  : 500,
+                    'type'  : 'seven'
+                },
+                2 : {
+                    'src'   : 'img/lots/cherry.png',
+                    'rate'  : 400,
+                    'type'  : 'cherry'
+                },
+                3 : {
+                    'src'   : 'img/lots/watermelon.png',
+                    'rate'  : 300,
+                    'type'  : 'watermelon'
+                },
+                4 : {
+                    'src'   : 'img/lots/plum.png',
+                    'rate'  : 200,
+                    'type'  : 'plum'
+                },
+                5 : {
+                    'src'   : 'img/lots/lemon.png',
+                    'rate'  : 100,
+                    'type'  : 'lemon'
+                }
+                
+            },
+            
             symbolWidth         : 216,  // px
             
             symbolHeight        : 144,  // px
@@ -10,8 +40,6 @@ define(function () {
             typeCount           : 4,    // unique symbol count 
 
             centerLine          : 2,    // win line
-
-            availableSymbols    : ['A','B','C','D','E'],
 
             speed               : 12,   // offset per iteration, px
 
@@ -24,11 +52,20 @@ define(function () {
     };
     
     var _calcParams = {
-            width               : _fixedParams.symbolWidth * _fixedParams.slotCount,
-            height              : _fixedParams.lineCount * _fixedParams.symbolHeight,           
-            countSymbolInSlot   : _fixedParams.availableSymbols.length * _fixedParams.typeCount,  
-            slotHeight          : _fixedParams.symbolHeight * _fixedParams.availableSymbols.length * _fixedParams.typeCount    
-    }  
+            lotsCount           : null,      
+            width               : null,
+            height              : null,           
+            itemsInSlotAmount   : null,  
+            slotHeight          : null    
+    };
+    
+    
+    _calcParams.lotsCount           = Object.keys(_fixedParams.lots).length;      
+    _calcParams.width               = _fixedParams.symbolWidth * _fixedParams.slotCount;
+    _calcParams.height              = _fixedParams.lineCount * _fixedParams.symbolHeight;          
+    _calcParams.itemsInSlotAmount   = _calcParams.lotsCount * _fixedParams.typeCount;  
+    _calcParams.slotHeight          = _calcParams.itemsInSlotAmount * _fixedParams.symbolHeight;    
+    
     
     var _mergedParams = Object.assign(_fixedParams, _calcParams);
     

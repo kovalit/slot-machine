@@ -9,8 +9,11 @@ define(["./config", "./draw"], function (config, draw) {
     return {
         
         isPlay: false,
+        
+        val1: 10,
 
         addSymbols: function(type, image) {
+
             if (_symbols[type] === undefined) {
                 _symbols[type] = {
                     img: image
@@ -23,9 +26,9 @@ define(["./config", "./draw"], function (config, draw) {
                 _playfield      = {};
                 _centerSymbols  = [];
                 
-                this.isPlay     = false;
+                this.isPlay = false;
                 
-                this.fillPlayfield();
+                this.setPlayfield();
                 
                 this.initStopedSlots();
                 
@@ -35,16 +38,13 @@ define(["./config", "./draw"], function (config, draw) {
         
         
         firstDraw: function() {
-            
             for (var i = 1; i <= config.slotCount; i++) {
                 for (var j = 1; j <= config.lineCount ; j++) {
-                    var x       = (i-1) * config.symbolWidth;
-                    var y       = (j-1) * config.symbolHeight;
-                    var type    = config.availableSymbols[j-1];
-                    draw.image(_symbols[type].img, x, y, config.symbolWidth, config.symbolHeight);   
+                    var x       = (i - 1) * config.symbolWidth;
+                    var y       = (j - 1) * config.symbolHeight;
+                    draw.image(_symbols[j].img, x, y, config.symbolWidth, config.symbolHeight);   
                 }
-            }
-            
+            }  
         },
         
         
@@ -79,9 +79,10 @@ define(["./config", "./draw"], function (config, draw) {
         },
         
         
-        fillPlayfield: function() {
+        setPlayfield: function() {
             
             var randomSymbolList = {};
+            var lotsKey = Object.keys(config.lots);
             
             for (var i = 1; i <= config.slotCount; i++) {
                 
@@ -89,20 +90,20 @@ define(["./config", "./draw"], function (config, draw) {
                 
                 for (var j = 1; j <= config.typeCount; j++) {
                     
-                    var randomArr = this.shuffle(config.availableSymbols);
+                    var randomArr = this.shuffle(lotsKey);
                     randomSymbolList[i] = randomSymbolList[i].concat(randomArr); 
-                    
+                
                 }
                 
             }  
-            
+
             for (var i = 1; i <= config.slotCount; i++) {
                 
                 _playfield[i] = {};
                 
                 var x = config.symbolWidth * (i - 1);
                 
-                for (var j = 1; j <= config.countSymbolInSlot ; j++) {
+                for (var j = 1; j <= config.itemsInSlotAmount ; j++) {
                     
                     var y = config.symbolHeight * (j - 1);
                     
@@ -122,7 +123,7 @@ define(["./config", "./draw"], function (config, draw) {
         },
         
         
-        outputPlayfield: function () {
+        putPlayfield: function () {
             
             this.calcPlayfield();
             
@@ -142,13 +143,12 @@ define(["./config", "./draw"], function (config, draw) {
                     continue;
                 }
                 
-                for (var j = 1; j <= config.countSymbolInSlot ; j++) {
+                for (var j = 1; j <= config.itemsInSlotAmount ; j++) {
 
                     var x       = _playfield[i][j].x;
                     var y       = _playfield[i][j].y;
                     var type    = _playfield[i][j].type;
                     var isDraw  = (y + config.symbolHeight) > 0;
-                    
                     if (isDraw) {
                         draw.image(_symbols[type].img, x, y, config.symbolWidth, config.symbolHeight);
                     }
@@ -165,13 +165,13 @@ define(["./config", "./draw"], function (config, draw) {
             var isLastStop = _stopedSlots[config.slotCount].isFinishDraw;
 
             if(!isLastStop) {
-                requestAnimationFrame(this.outputPlayfield.bind(this));
+                requestAnimationFrame(this.putPlayfield.bind(this));
             }
             else {
                 this.isPlay = false;
                 var isWin = this.checkWin();
                 if (isWin) {
-                    requestAnimationFrame(this.winAnimation.bind(this));
+                    requestAnimationFrame(this.winAnimation.bind(this, 0));
                 }
             }
     
@@ -194,7 +194,7 @@ define(["./config", "./draw"], function (config, draw) {
                       _stopedSlots[i].isFinishCalc = banance.isLastCalc;
                 }
 
-                for (var j = 1; j <= config.countSymbolInSlot ; j++) {
+                for (var j = 1; j <= config.itemsInSlotAmount ; j++) {
 
                     var y = _playfield[i][j].y;
 
@@ -220,7 +220,7 @@ define(["./config", "./draw"], function (config, draw) {
                 isLastCalc: false
             };
             
-            for (var j = 1; j <= config.countSymbolInSlot ; j++) {
+            for (var j = 1; j <= config.itemsInSlotAmount ; j++) {
                     var y = _playfield[slot][j].y;
                     if (y <= 0 && Math.abs(y) <= config.speed) {
                         result.offset = Math.abs(y);
@@ -241,7 +241,7 @@ define(["./config", "./draw"], function (config, draw) {
            
             for (var i = 1; i <= config.slotCount; i++) {
 
-               for (var j = 1; j <= config.countSymbolInSlot ; j++) {
+               for (var j = 1; j <= config.itemsInSlotAmount ; j++) {
                    
                    if (_playfield[i][j].y === config.symbolHeight * (config.centerLine - 1)) {
                        _centerSymbols.push(_playfield[i][j].type);
@@ -263,55 +263,47 @@ define(["./config", "./draw"], function (config, draw) {
         },
         
         
-        winAnimation: function() {
-            
-            this.winIterator += 1;
-            
-            var end = (this.winIterator > config.winAnimationCount);
-            
-            if (!end) {
-              //  main.context.clearRect(0, (config.centerLine-1) * config.symbolHeight, this.width, config.symbolHeight);
-            }
-            
-            for (var i = 1; i <= config.slotCount; i++) {
+        winAnimation: function(winIterator) {
+
+                winIterator++;
                 
-                var x        = config.symbolWidth * (i-1);
-                var y       = config.symbolHeight * (config.centerLine -1);
-                var dx      = (this.winIterator - 1) * config.symbolWidth;
-                
-                var type    = _centerSymbols[i-1];
-                
-//                main.context.drawImage(main.symbols[type].img, 
-//                        dx, 0, 
-//                        config.symbolWidth, config.symbolHeight, 
-//                        x, y, 
-//                        config.symbolWidth, config.symbolHeight
-//                    );
-            }
-            
-            if (!end) {
-                    setTimeout(
-                            function() {
-                                requestAnimationFrame(this.winAnimation);   
-                            }, 
-                        config.winAnimationDelay);
-            }
+                var end = (winIterator > config.winAnimationCount);
+
+                if (!end) {
+                    draw.clear(config.width, config.symbolHeight, 0, (config.centerLine-1) * config.symbolHeight)
+                }
+
+                for (var i = 1; i <= config.slotCount; i++) {
+
+                    var x       = config.symbolWidth * (i-1);
+                    var y       = config.symbolHeight * (config.centerLine -1);
+                    var dx      = (winIterator - 1) * config.symbolWidth;
+
+                    var type    = _centerSymbols[i-1];
+
+                    draw.image(_symbols[type].img, x, y, config.symbolWidth, config.symbolHeight, dx);
+                }
+
+                if (!end) {
+                    setTimeout(function() {
+                        requestAnimationFrame(this.winAnimation.bind(this, winIterator));
+                    }.bind(this), config.winAnimationDelay);
+                }
+        
         },
         
         
         shuffle: function (array) {
             
-            var rand;
-            var index = -1;
-            var length = array.length;
-            var result = Array(length);
-            while (++index < length) {
-                rand = Math.floor(Math.random() * (index + 1));
-                result[index] = result[rand];
-                result[rand] = array[index];
-            }
-            
-            return result;
+            for (var i = array.length - 1; i >= 0; i--) {
+
+                 var randomIndex = Math.floor(Math.random()*(i+1)); 
+                 var itemAtIndex = array[randomIndex]; 
+
+                 array[randomIndex] = array[i]; 
+                 array[i] = itemAtIndex;
+             }
+             return array;
 
         }
         
