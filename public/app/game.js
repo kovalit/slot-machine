@@ -1,6 +1,9 @@
 define(["./config", "./draw"], function (config, draw) {
     
-  
+    /**
+    * Игровой автомат
+    * @private
+    */
     var _machine = {
         
         /**
@@ -55,7 +58,7 @@ define(["./config", "./draw"], function (config, draw) {
                 
                 randomSymbolList[i] = [];
                 
-                for (var j = 1; j <= config.typeCount; j++) {    
+                for (var j = 1; j <= config.duplicateCount; j++) {    
                     var randomArr = this.shuffle(lotsKey);
                     randomSymbolList[i] = randomSymbolList[i].concat(randomArr); 
                 } 
@@ -195,13 +198,13 @@ define(["./config", "./draw"], function (config, draw) {
             
             for (var j = 1; j <= config.itemsInSlotAmount ; j++) {
                     var y = this.playfield[slot][j].y;
-                    if (y <= 0 && Math.abs(y) <= config.speed) {
+                    if (y <= 0 && Math.abs(y) <= config.speed) { 
                         result.offset = Math.abs(y);
                         result.isLastCalc = true;
                         break;
                     }
             }
-            
+         
             return result;
             
         },
@@ -214,7 +217,8 @@ define(["./config", "./draw"], function (config, draw) {
         */  
         checkWin: function() {
             
-            var isWin = true;
+            var isWin       =  true;
+            var currentScore = 0;
            
             for (var i = 1; i <= config.slotCount; i++) {
 
@@ -235,7 +239,13 @@ define(["./config", "./draw"], function (config, draw) {
                }
                symbol = this.centerSymbols[key];
            }
-           return isWin;
+           
+            if (isWin) {
+                currentScore = config.lots[symbol].rate;
+                gameplay.addScore(currentScore);
+            }
+           
+            return isWin;
 
         },
         
@@ -275,6 +285,7 @@ define(["./config", "./draw"], function (config, draw) {
         
         /**
         * Перетасовывает массив случайным образом
+        * 
         * @param    {array} array - входной массив
         * @return   {array} 
         */ 
@@ -294,12 +305,28 @@ define(["./config", "./draw"], function (config, draw) {
         
     };
 
-            
+    /**
+    * События игры
+    * @public
+    */
     var gameplay = {
         
+        /**
+        * Признак начала игры
+        */ 
         isPlay  : false,
+        
+        /**
+        * Счет игры
+        */ 
         score   : 0,
 
+        /**
+        * Добавляет лот в игровой автомат
+        * 
+        * @param    {number} type - номер лота в списке
+        * @param    {Image} image - изображение лота
+        */ 
         addSymbols: function(type, image) {
 
             if (_machine.symbols[type] === undefined) {
@@ -309,6 +336,11 @@ define(["./config", "./draw"], function (config, draw) {
             }
         },
 
+        /**
+        * Запускает игровой автомат
+        * 
+        * @this   {_gameplay}
+        */ 
         run: function() {
 
                 _machine.playfield      = {};
@@ -324,17 +356,11 @@ define(["./config", "./draw"], function (config, draw) {
                 
         },
         
-        
-        firstDraw: function() {
-            for (var i = 1; i <= config.slotCount; i++) {
-                for (var j = 1; j <= config.lineCount ; j++) {
-                    var x       = (i - 1) * config.symbolWidth;
-                    var y       = (j - 1) * config.symbolHeight;
-                    draw.image(_machine.symbols[j].img, x, y, config.symbolWidth, config.symbolHeight);   
-                }
-            }  
-        },
-        
+        /**
+        * Инициализирует остановку игрового автомата
+        * 
+        * @this   {_gameplay}
+        */ 
         stop: function() {
             for (var i = 1; i <= config.slotCount; i++) { 
                 
@@ -350,10 +376,41 @@ define(["./config", "./draw"], function (config, draw) {
             if(!isLastStop) {
                 setTimeout(this.stop.bind(this), config.stopSlotDelay);
             }
-            
+        },
+        
+        /**
+        * Добавляет счет
+        * 
+        * @param  {value} number - входной массив
+        * @this   {_gameplay}
+        */ 
+        addScore: function(value) {
+            this.score += value;
+            console.log(this.score);
+        },
+
+        /**
+        * Отображает исходное состояние
+        */ 
+        drawInitialState: function() {
+            for (var i = 1; i <= config.slotCount; i++) {
+                var counter = 0;
+                for (var j = 1; j <= config.lineCount ; j++) {
+                    counter ++;
+                    var x       = (i - 1) * config.symbolWidth;
+                    var y       = (j - 1) * config.symbolHeight;
+                    var type    = counter;
+                    if (counter >= config.lotsCount) {
+                        counter = 0;
+                    }
+
+                    draw.image(_machine.symbols[type].img, x, y, config.symbolWidth, config.symbolHeight);   
+                }
+            }  
         }
         
     };
     
     return gameplay;
+    
 });

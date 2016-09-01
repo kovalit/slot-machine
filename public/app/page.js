@@ -1,15 +1,18 @@
 define(["./config", "./game", "./draw"], function (config, game, draw) {
      
-     
     return {
 
+        /**
+        * Создает холст на странице
+        *
+        * @this   {page}
+        */
         createCanvas : function() {
 
                 var canvas = document.createElement("canvas");
                 
                 canvas.setAttribute("width",  config.width);
                 canvas.setAttribute("height", config.height);
-                canvas.setAttribute("id", "gameField");
                 draw.setContext(canvas);
                 
                 document.body.insertBefore(canvas, document.body.childNodes[0]);
@@ -17,7 +20,11 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
   
         },
         
-        
+        /**
+        * Загружает изображения лотов
+        *
+        * @this   {page}
+        */
         loadImages: function() {
             
             for (var key in config.lots) {
@@ -29,6 +36,11 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
             
         },
         
+        /**
+        * Проверяет окончание загрузки
+        *
+        * @this   {page}
+        */
         checkImageLoad: (function() {
                 var imageLoaded = 1;
                 
@@ -36,21 +48,16 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
                     imageLoaded++;
                     if (imageLoaded === config.lotsCount) {
                         this.createButton();
-                        setTimeout(game.firstDraw, 100);
+                        setTimeout(game.drawInitialState, 100);
                     }
                 };
         })(),
 
-        startClick: function() {
-            
-            if (!game.isPlay) {
-                game.run();
-                setTimeout(game.stop.bind(game), config.stopDelay);
-            }
-            
-        },
-        
-        
+        /**
+        * Создает кнопку старт
+        *
+        * @this   {page}
+        */
         createButton: function() {
             
                 var wrapper = document.getElementById('wrapper'); 
@@ -64,6 +71,18 @@ define(["./config", "./game", "./draw"], function (config, game, draw) {
                 
                 wrapper.appendChild(input);
                 
+        },
+        
+        /**
+        * Событие нажатия на кнопку старт
+        */
+        startClick: function() {
+            
+            if (!game.isPlay) {
+                game.run();
+                setTimeout(game.stop.bind(game), config.stopGameDelay);
+            }
+            
         }
         
     };

@@ -37,7 +37,6 @@ define(function () {
 
             slotCount           : 3,    // column count
             lineCount           : 3,    // row count
-            typeCount           : 4,    // unique symbol count 
 
             centerLine          : 2,    // win line
 
@@ -45,7 +44,7 @@ define(function () {
 
             winAnimationCount   : 5,    // win keyframes count
 
-            stopDelay           : 1000, // ms
+            stopGameDelay       : 1000, // ms
             stopSlotDelay       : 1000, // ms  
 
             winAnimationDelay   : 200   // ms
@@ -56,15 +55,17 @@ define(function () {
             width               : null,
             height              : null,           
             itemsInSlotAmount   : null,  
-            slotHeight          : null    
+            slotHeight          : null,
+            duplicateCount      : null
     };
     
     
-    _calcParams.lotsCount           = Object.keys(_fixedParams.lots).length;      
+    _calcParams.lotsCount           = Object.keys(_fixedParams.lots).length; 
+    _calcParams.duplicateCount      = parseInt(_fixedParams.lineCount / _calcParams.lotsCount) + 1;
     _calcParams.width               = _fixedParams.symbolWidth * _fixedParams.slotCount;
     _calcParams.height              = _fixedParams.lineCount * _fixedParams.symbolHeight;          
-    _calcParams.itemsInSlotAmount   = _calcParams.lotsCount * _fixedParams.typeCount;  
-    _calcParams.slotHeight          = _calcParams.itemsInSlotAmount * _fixedParams.symbolHeight;    
+    _calcParams.itemsInSlotAmount   = _calcParams.lotsCount * _calcParams.duplicateCount;  
+    _calcParams.slotHeight          = _calcParams.itemsInSlotAmount * _fixedParams.symbolHeight; 
     
     
     var _mergedParams = Object.assign(_fixedParams, _calcParams);
